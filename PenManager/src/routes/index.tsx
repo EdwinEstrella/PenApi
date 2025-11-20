@@ -25,6 +25,7 @@ import { Typebot } from "@/pages/instance/Typebot";
 import { Webhook } from "@/pages/instance/Webhook";
 import { Websocket } from "@/pages/instance/Websocket";
 import Login from "@/pages/Login";
+import RegisterPage from "@/pages/Register";
 import Home from "@/pages/Home";
 
 const router = createBrowserRouter([
@@ -37,6 +38,14 @@ const router = createBrowserRouter([
     element: (
       <PublicRoute>
         <Login />
+      </PublicRoute>
+    ),
+  },
+  {
+    path: "/manager/register",
+    element: (
+      <PublicRoute>
+        <RegisterPage />
       </PublicRoute>
     ),
   },

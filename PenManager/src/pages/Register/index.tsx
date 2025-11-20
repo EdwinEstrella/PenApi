@@ -5,6 +5,7 @@ import { z } from "zod";
 import { useNavigate, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { authService } from "@/lib/queries/auth/authService";
+import { getToken, saveToken, TOKEN_ID } from "@/lib/queries/token";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -46,7 +47,13 @@ export default function RegisterPage() {
     setSuccess(null);
 
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8080";
+      const apiUrl = getToken(TOKEN_ID.API_URL) || import.meta.env.VITE_API_URL || "http://localhost:8080";
+      
+      // Ensure API URL is saved
+      if (!getToken(TOKEN_ID.API_URL)) {
+        await saveToken({ url: apiUrl });
+      }
+
       const result = await authService.register({
         url: apiUrl,
         email: data.email,
@@ -54,7 +61,9 @@ export default function RegisterPage() {
         name: data.name,
       });
 
-      if (result) {
+      if (result && result.status === 201) {
+        // Wait a moment for localStorage to be updated
+        await new Promise(resolve => setTimeout(resolve, 100));
         setSuccess("Account created successfully! Redirecting to dashboard...");
         setTimeout(() => {
           navigate("/manager/");
