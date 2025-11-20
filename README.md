@@ -25,54 +25,41 @@ PenApi soporta múltiples tipos de conexiones a WhatsApp, permitiendo opciones d
   - La API Cloud soporta características como cifrado de extremo a extremo, análisis avanzados y herramientas de servicio al cliente más completas.
   - Para usar esta API, debes cumplir con las políticas de Meta y potencialmente pagar por el uso basado en el volumen de mensajes y otros factores.
 
-## Integrations
+## Integraciones
 
-Evolution API supports various integrations to enhance its functionality. Below is a list of available integrations and their uses:
+PenApi soporta varias integraciones para mejorar su funcionalidad. A continuación se lista las integraciones disponibles y sus usos:
 
 - [Typebot](https://typebot.io/):
-  - Build conversational bots using Typebot, integrated directly into Evolution with trigger management.
+  - Construye bots conversacionales usando Typebot, integrados directamente en PenApi con gestión de disparadores.
 
 - [Chatwoot](https://www.chatwoot.com/):
-  - Direct integration with Chatwoot for handling customer service for your business.
+  - Integración directa con Chatwoot para manejar el servicio al cliente de tu negocio.
 
 - [RabbitMQ](https://www.rabbitmq.com/):
-  - Receive events from the Evolution API via RabbitMQ.
+  - Recibe eventos de PenApi vía RabbitMQ.
 
 - [Apache Kafka](https://kafka.apache.org/):
-  - Receive events from the Evolution API via Apache Kafka for real-time event streaming and processing.
+  - Recibe eventos de PenApi vía Apache Kafka para streaming y procesamiento de eventos en tiempo real.
 
 - [Amazon SQS](https://aws.amazon.com/pt/sqs/):
-  - Receive events from the Evolution API via Amazon SQS.
+  - Recibe eventos de PenApi vía Amazon SQS.
 
 - [Socket.io](https://socket.io/):
-  - Receive events from the Evolution API via WebSocket.
+  - Recibe eventos de PenApi vía WebSocket.
 
 - [Dify](https://dify.ai/):
-  - Integrate your Evolution API directly with Dify AI for seamless trigger management and multiple agents.
+  - Integra tu PenApi directamente con Dify AI para gestión de disparadores sin problemas y múltiples agentes.
 
 - [OpenAI](https://openai.com/):
-  - Integrate your Evolution API with OpenAI for AI capabilities, including audio-to-text conversion, available across all Evolution integrations.
+  - Integra tu PenApi con OpenAI para capacidades de IA, incluyendo conversión de audio a texto, disponible en todas las integraciones de PenApi.
 
 - Amazon S3 / Minio:
-  - Store media files received in [Amazon S3](https://aws.amazon.com/pt/s3/) or [Minio](https://min.io/).
+  - Almacena archivos multimedia recibidos en [Amazon S3](https://aws.amazon.com/pt/s3/) o [Minio](https://min.io/).
 
-## Community & Feedback
+## Contacto
 
-We value community input and feedback to continuously improve Evolution API:
-
-### 🚀 Feature Requests & Roadmap
-- **[Feature Requests](https://evolutionapi.canny.io/feature-requests)**: Submit new feature ideas and vote on community proposals
-- **[Roadmap](https://evolutionapi.canny.io/feature-requests)**: View planned features and development progress
-- **[Changelog](https://evolutionapi.canny.io/changelog)**: Stay updated with the latest releases and improvements
-
-### 💬 Community Support
-- **[WhatsApp Group](https://evolution-api.com/whatsapp)**: Join our community for support and discussions
-- **[Discord Community](https://evolution-api.com/discord)**: Real-time chat with developers and users
-- **[GitHub Issues](https://github.com/EvolutionAPI/evolution-api/issues)**: Report bugs and technical issues
-
-### 🔒 Security
-- **[Security Policy](./SECURITY.md)**: Guidelines for reporting security vulnerabilities
-- **Security Contact**: contato@evolution-api.com
+Para consultas y soporte, puedes contactarnos en:
+- **Email**: Info@Azokia.com
 
 ## Telemetry Notice
 
