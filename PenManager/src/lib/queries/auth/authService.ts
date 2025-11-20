@@ -39,7 +39,7 @@ export const authService = {
       });
 
       if (data.status === 200) {
-        saveToken({
+        await saveToken({
           url,
           token: data.data.token,
           version: data.data.user.role,
@@ -67,7 +67,7 @@ export const authService = {
       });
 
       if (data.status === 201) {
-        saveToken({
+        await saveToken({
           url,
           token: data.data.token,
           version: data.data.user.role,

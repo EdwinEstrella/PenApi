@@ -156,8 +156,7 @@ if (metricsConfig.ENABLED) {
   });
 }
 
-if (!serverConfig.DISABLE_MANAGER) router.use('/manager', new ViewsRouter().router);
-
+// Serve assets BEFORE manager routes to ensure static files are accessible
 router.get('/assets/*', (req, res) => {
   const fileName = req.params[0];
 
@@ -190,13 +189,16 @@ router.get('/assets/*', (req, res) => {
   }
 });
 
+// Manager routes must be after assets route
+if (!serverConfig.DISABLE_MANAGER) router.use('/manager', new ViewsRouter().router);
+
 router
   .use((req, res, next) => telemetry.collectTelemetry(req, res, next))
 
   .get('/', async (req, res) => {
-    // If manager is enabled, redirect directly to manager dashboard
+    // If manager is enabled, redirect to login page for multi-tenant authentication
     if (!serverConfig.DISABLE_MANAGER) {
-      return res.redirect('/manager/');
+      return res.redirect('/manager/login');
     }
 
     // If manager is disabled, return API info (for API-only deployments)

@@ -45,7 +45,7 @@ function Login() {
       
       // Ensure API URL is saved
       if (!getToken(TOKEN_ID.API_URL)) {
-        saveToken({ url: apiUrl });
+        await saveToken({ url: apiUrl });
       }
 
       const result = await authService.login({
@@ -54,7 +54,9 @@ function Login() {
         password: data.password,
       });
 
-      if (result) {
+      if (result && result.status === 200) {
+        // Wait a moment for localStorage to be updated
+        await new Promise(resolve => setTimeout(resolve, 100));
         navigate("/manager/");
       } else {
         setError("Invalid email or password");

@@ -16,7 +16,7 @@ const PublicRoute = ({ children }: PublicRouteProps) => {
       // Set default API URL if not set
       const apiUrl = getToken(TOKEN_ID.API_URL) || import.meta.env.VITE_API_URL || "http://localhost:8080";
       if (!getToken(TOKEN_ID.API_URL)) {
-        saveToken({ url: apiUrl });
+        await saveToken({ url: apiUrl });
       }
 
       // Check if JWT token exists and user is authenticated
