@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
+import jwt, { SignOptions } from 'jsonwebtoken';
 import { Logger } from '@config/logger.config';
 import { prismaRepository } from '@api/server.module';
 import { UserRole, UserStatus, PlanType } from '@prisma/client';
@@ -50,7 +50,8 @@ class AuthService {
   }
 
   generateToken(payload: JwtPayload): string {
-    return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+    const options: SignOptions = { expiresIn: JWT_EXPIRES_IN };
+    return jwt.sign(payload, JWT_SECRET, options);
   }
 
   verifyToken(token: string): JwtPayload {

@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  penapi:
+    build:
+      context: .
+      dockerfile: Dockerfile.dokploy
+    ports:
+      - "8080:8080"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_PROVIDER=postgresql
+      - DATABASE_URL=${DATABASE_URL}
+      - AUTHENTICATION_API_KEY=${AUTHENTICATION_API_KEY}
+      - JWT_SECRET=${JWT_SECRET}
+      - SERVER_URL=${SERVER_URL}
+      - REDIS_ENABLED=${REDIS_ENABLED:-false}
+      - REDIS_URI=${REDIS_URI}
+      - WEBHOOK_GLOBAL=${WEBHOOK_GLOBAL}
+      - WEBHOOK_GLOBAL_ENABLED=${WEBHOOK_GLOBAL_ENABLED:-false}
+    volumes:
+      - uploads:/app/uploads
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  uploads:

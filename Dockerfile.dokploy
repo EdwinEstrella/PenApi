@@ -1,6 +1,6 @@
 FROM node:20-alpine AS builder
 
-# Install build dependencies
+# Install dependencies needed for build
 RUN apk add --no-cache git python3 make g++ ffmpeg
 
 WORKDIR /app
@@ -10,8 +10,8 @@ COPY package*.json ./
 COPY tsconfig.json ./
 COPY tsup.config.ts ./
 
-# Install all dependencies
-RUN npm ci
+# Install dependencies
+RUN npm ci --only=production
 
 # Copy source code
 COPY src ./src
@@ -29,12 +29,10 @@ RUN npm run build
 FROM node:20-alpine AS production
 
 # Install runtime dependencies
-RUN apk add --no-cache ffmpeg curl tzdata bash openssl
+RUN apk add --no-cache ffmpeg curl tzdata
 
 # Set timezone
 ENV TZ=America/Sao_Paulo
-ENV NODE_ENV=production
-ENV DOCKER_ENV=true
 
 WORKDIR /app
 
@@ -49,9 +47,9 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=builder /app/runWithProvider.js ./
 
-# Create non-root user for security
-RUN addgroup -g 1001 -S nodejs && \
-    adduser -S nodejs -u 1001
+# Create non-root user
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S nodejs -u 1001
 
 # Change ownership to nodejs user
 RUN chown -R nodejs:nodejs /app
