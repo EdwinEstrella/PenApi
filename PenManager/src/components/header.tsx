@@ -31,7 +31,10 @@ function Header({ instanceId }: { instanceId?: string }) {
   return (
     <header className="flex items-center justify-between px-4 py-2">
       <Link to="/manager" onClick={navigateToDashboard} className="flex h-8 items-center gap-4">
-        <img src={theme === "dark" ? "https://evolution-api.com/files/evo/evolution-logo-white.svg" : "https://evolution-api.com/files/evo/evolution-logo.svg"} alt="Logo" className="h-full" />
+        <div className="flex items-center gap-1 h-full">
+          <span className="text-blue-500 font-bold text-xl">Pen</span>
+          <span className="text-white font-bold text-xl">Api</span>
+        </div>
       </Link>
       <div className="flex items-center gap-4">
         {instanceId && (

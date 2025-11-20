@@ -13,6 +13,7 @@ import fs from 'fs';
 import mimeTypes from 'mime-types';
 import path from 'path';
 
+import { AuthRouter } from './auth.router';
 import { BusinessRouter } from './business.router';
 import { CallRouter } from './call.router';
 import { ChatRouter } from './chat.router';
@@ -69,7 +70,7 @@ const metricsBasicAuth = (req: Request, res: Response, next: NextFunction) => {
 
   const auth = req.get('Authorization');
   if (!auth || !auth.startsWith('Basic ')) {
-    res.set('WWW-Authenticate', 'Basic realm="Evolution API Metrics"');
+    res.set('WWW-Authenticate', 'Basic realm="PenApi Metrics"');
     return res.status(401).send('Authentication required');
   }
 
@@ -191,7 +192,7 @@ router
   .get('/', async (req, res) => {
     res.status(HttpStatus.OK).json({
       status: HttpStatus.OK,
-      message: 'Welcome to the Evolution API, it is working!',
+      message: 'Welcome to the PenApi, it is working!',
       version: packageJson.version,
       clientName: databaseConfig.CONNECTION.CLIENT_NAME,
       manager: !serverConfig.DISABLE_MANAGER ? `${req.protocol}://${req.get('host')}/manager` : undefined,
@@ -209,6 +210,7 @@ router
       facebookUserToken: facebookConfig.USER_TOKEN,
     });
   })
+  .use('/auth', AuthRouter)
   .use('/instance', new InstanceRouter(configService, ...guards).router)
   .use('/message', new MessageRouter(...guards).router)
   .use('/call', new CallRouter(...guards).router)

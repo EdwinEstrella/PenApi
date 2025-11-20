@@ -4,6 +4,8 @@ import { instanceController } from '@api/server.module';
 import { ConfigService } from '@config/env.config';
 import { instanceSchema, presenceOnlySchema } from '@validate/validate.schema';
 import { RequestHandler, Router } from 'express';
+import { checkInstanceLimit } from '@api/guards/instanceLimit.guard';
+import { authService } from '@api/services/auth.service';
 
 import { HttpStatus } from './index.router';
 
@@ -14,12 +16,28 @@ export class InstanceRouter extends RouterBroker {
   ) {
     super();
     this.router
-      .post('/create', ...guards, async (req, res) => {
+      .post('/create', ...guards, checkInstanceLimit, async (req, res) => {
         const response = await this.dataValidate<InstanceDto>({
           request: req,
           schema: instanceSchema,
           ClassRef: InstanceDto,
-          execute: (instance) => instanceController.createInstance(instance),
+          execute: async (instance) => {
+            const result = await instanceController.createInstance(instance);
+
+            // If user is authenticated (JWT), assign instance to user
+            const user = (req as any).user;
+            if (user && result?.data?.id) {
+              try {
+                await authService.assignInstanceToUser(user.userId, result.data.id);
+                logger.info(`Instance ${result.data.id} assigned to user ${user.userId}`);
+              } catch (error) {
+                logger.error('Failed to assign instance to user:', error);
+                // Don't fail the request if assignment fails
+              }
+            }
+
+            return result;
+          },
         });
 
         return res.status(HttpStatus.CREATED).json(response);
@@ -65,6 +83,32 @@ export class InstanceRouter extends RouterBroker {
         });
 
         return res.status(HttpStatus.OK).json(response);
+      })
+      .get('/my-instances', async (req, res) => {
+        try {
+          const user = (req as any).user;
+
+          if (!user) {
+            return res.status(HttpStatus.UNAUTHORIZED).json({
+              status: HttpStatus.UNAUTHORIZED,
+              message: 'Authentication required',
+            });
+          }
+
+          const instances = await authService.getUserInstances(user.userId);
+
+          return res.status(HttpStatus.OK).json({
+            status: HttpStatus.OK,
+            message: 'Instances retrieved successfully',
+            data: instances,
+          });
+        } catch (error) {
+          logger.error('Get user instances error:', error);
+          return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+            status: HttpStatus.INTERNAL_SERVER_ERROR,
+            message: 'Internal server error',
+          });
+        }
       })
       .post(this.routerPath('setPresence'), ...guards, async (req, res) => {
         const response = await this.dataValidate<null>({
