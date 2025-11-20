@@ -13,10 +13,10 @@ services:
       - DATABASE_URL=${DATABASE_URL}
       - AUTHENTICATION_API_KEY=${AUTHENTICATION_API_KEY}
       - JWT_SECRET=${JWT_SECRET}
-      - SERVER_URL=${SERVER_URL}
+      - SERVER_URL=https://${PRIMARY_DOMAIN}
       - REDIS_ENABLED=${REDIS_ENABLED:-false}
       - REDIS_URI=${REDIS_URI}
-      - WEBHOOK_GLOBAL=${WEBHOOK_GLOBAL}
+      - WEBHOOK_GLOBAL=https://${PRIMARY_DOMAIN}/webhook
       - WEBHOOK_GLOBAL_ENABLED=${WEBHOOK_GLOBAL_ENABLED:-false}
     volumes:
       - uploads:/app/uploads
