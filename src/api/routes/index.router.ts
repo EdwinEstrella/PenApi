@@ -166,7 +166,7 @@ router.get('/assets/*', (req, res) => {
     return res.status(403).send('Forbidden');
   }
 
-  const basePath = path.join(process.cwd(), 'manager', 'dist');
+  const basePath = path.join(process.cwd(), 'PenManager', 'dist');
   const assetsPath = path.join(basePath, 'assets');
   const filePath = path.join(assetsPath, fileName);
 
@@ -179,6 +179,10 @@ router.get('/assets/*', (req, res) => {
   }
 
   if (fs.existsSync(resolvedPath)) {
+    // Set no-cache headers for assets to prevent browser caching during development
+    res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.set('Pragma', 'no-cache');
+    res.set('Expires', '0');
     res.set('Content-Type', mimeTypes.lookup(resolvedPath) || 'text/css');
     res.send(fs.readFileSync(resolvedPath));
   } else {
@@ -190,12 +194,18 @@ router
   .use((req, res, next) => telemetry.collectTelemetry(req, res, next))
 
   .get('/', async (req, res) => {
+    // If manager is enabled, redirect directly to manager dashboard
+    if (!serverConfig.DISABLE_MANAGER) {
+      return res.redirect('/manager/');
+    }
+
+    // If manager is disabled, return API info (for API-only deployments)
     res.status(HttpStatus.OK).json({
       status: HttpStatus.OK,
       message: 'Welcome to the PenApi, it is working!',
       version: packageJson.version,
       clientName: databaseConfig.CONNECTION.CLIENT_NAME,
-      manager: !serverConfig.DISABLE_MANAGER ? `${req.protocol}://${req.get('host')}/manager` : undefined,
+      manager: undefined,
       documentation: `https://doc.evolution-api.com`,
       whatsappWebVersion: (await fetchLatestWaWebVersion({})).version.join('.'),
     });

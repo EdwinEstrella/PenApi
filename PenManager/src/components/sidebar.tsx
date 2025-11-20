@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { CircleHelp, Cog, FileQuestion, IterationCcw, LayoutDashboard, LifeBuoy, MessageCircle, Zap, ChevronDown } from "lucide-react";
+import { Cog, IterationCcw, LayoutDashboard, MessageCircle, Zap, ChevronDown } from "lucide-react";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -117,31 +117,6 @@ function Sidebar() {
           },
         ],
       },
-      {
-        id: "documentation",
-        title: t("sidebar.documentation"),
-        icon: FileQuestion,
-        link: "https://doc.evolution-api.com",
-        divider: true,
-      },
-      {
-        id: "postman",
-        title: t("sidebar.postman"),
-        icon: CircleHelp,
-        link: "https://evolution-api.com/postman",
-      },
-      {
-        id: "discord",
-        title: t("sidebar.discord"),
-        icon: MessageCircle,
-        link: "https://evolution-api.com/discord",
-      },
-      {
-        id: "support-premium",
-        title: t("sidebar.supportPremium"),
-        icon: LifeBuoy,
-        link: "https://evolution-api.com/suporte-pro",
-      },
     ],
     [t],
   );
@@ -204,8 +179,12 @@ function Sidebar() {
             </Collapsible>
           ) : (
             <Button className={cn("relative flex w-full items-center justify-start gap-2", menu.isActive && "pointer-events-none")} variant={menu.isActive ? "secondary" : "link"}>
-              {"link" in menu && <a href={menu.link} target="_blank" rel="noreferrer" className="absolute inset-0 h-full w-full" />}
-              {"path" in menu && <Link to={`/manager/instance/${instance?.id}/${menu.path}`} className="absolute inset-0 h-full w-full" />}
+              {"link" in menu && typeof (menu as any).link === "string" && (
+                <a href={(menu as any).link} target="_blank" rel="noreferrer" className="absolute inset-0 h-full w-full" />
+              )}
+              {"path" in menu && typeof (menu as any).path === "string" && (
+                <Link to={`/manager/instance/${instance?.id}/${(menu as any).path}`} className="absolute inset-0 h-full w-full" />
+              )}
               {menu.icon && <menu.icon size="15" />}
               <span>{menu.title}</span>
             </Button>

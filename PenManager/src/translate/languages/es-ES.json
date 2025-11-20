@@ -63,11 +63,7 @@
     "evoai": "EvoAI",
     "n8n": "n8n",
     "evolutionBot": "Bot Evolution",
-    "flowise": "Flowise",
-    "documentation": "Documentación",
-    "postman": "Postman",
-    "discord": "Discord",
-    "supportPremium": "Soporte Premium"
+    "flowise": "Flowise"
   },
   "toast": {
     "instance": {
@@ -77,12 +73,16 @@
     }
   },
   "login": {
-    "title": "Evolution Manager",
-    "description": "Por favor, inicia sesión para continuar",
-    "form": {
-      "serverUrl": "URL del Servidor",
-      "apiKey": "Clave API Global"
-    },
+    "title": "Bienvenido de nuevo",
+    "description": "Inicia sesión para gestionar tus instancias de WhatsApp",
+    "email": "Email",
+    "password": "Contraseña",
+    "emailPlaceholder": "Ingresa tu email",
+    "passwordPlaceholder": "Ingresa tu contraseña",
+    "signIn": "Iniciar sesión",
+    "signingIn": "Iniciando sesión...",
+    "noAccount": "¿No tienes una cuenta?",
+    "signUp": "Regístrate",
     "message": {
       "invalidServer": "Servidor inválido",
       "invalidCredentials": "Credenciales inválidas"

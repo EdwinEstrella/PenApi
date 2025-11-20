@@ -6,8 +6,12 @@
   "type": "commonjs",
   "scripts": {
     "build": "tsc --noEmit && tsup",
-    "start": "tsx ./src/main.ts",
+    "build:manager": "cd PenManager && npm install && npm run build",
+    "build:all": "npm run build:manager && npm run build",
+    "start": "node scripts/start.js",
+    "start:api": "tsx ./src/main.ts",
     "start:prod": "node dist/main",
+    "dev": "npm run build:manager && npm run dev:server",
     "dev:server": "tsx watch ./src/main.ts",
     "test": "tsx watch ./test/all.test.ts",
     "lint": "eslint --fix --ext .ts src",

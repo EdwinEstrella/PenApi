@@ -1,22 +1,52 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 
-import { getToken, TOKEN_ID } from "@/lib/queries/token";
+import { getToken, TOKEN_ID, saveToken } from "@/lib/queries/token";
+import { authService } from "@/lib/queries/auth/authService";
 
 type ProtectedRouteProps = {
   children: React.ReactNode;
 };
 
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
-  const apiUrl = getToken(TOKEN_ID.API_URL);
-  const token = getToken(TOKEN_ID.TOKEN);
-  const version = getToken(TOKEN_ID.VERSION);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
-  if (!apiUrl || !token || !version) {
+  useEffect(() => {
+    const checkAuth = async () => {
+      // Set default API URL if not set
+      const apiUrl = getToken(TOKEN_ID.API_URL) || import.meta.env.VITE_API_URL || "http://localhost:8080";
+      if (!getToken(TOKEN_ID.API_URL)) {
+        saveToken({ url: apiUrl });
+      }
+
+      // Check if JWT token exists
+      const token = getToken(TOKEN_ID.TOKEN);
+      if (!token) {
+        setIsAuthenticated(false);
+        return;
+      }
+
+      // Verify token is valid by checking user
+      const user = authService.getCurrentUser();
+      if (user) {
+        setIsAuthenticated(true);
+      } else {
+        setIsAuthenticated(false);
+      }
+    };
+
+    checkAuth();
+  }, []);
+
+  if (isAuthenticated === null) {
+    return null; // Loading state
+  }
+
+  if (!isAuthenticated) {
     return <Navigate to="/manager/login" />;
   }
 
-  return children;
+  return <>{children}</>;
 };
 
 export default ProtectedRoute;

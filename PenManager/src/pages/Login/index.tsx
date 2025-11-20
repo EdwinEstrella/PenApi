@@ -13,8 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
 import { authService } from "@/lib/queries/auth/authService";
-import { logout } from "@/lib/queries/token";
-import { useTheme } from "@/components/theme-provider";
+import { getToken, saveToken, TOKEN_ID } from "@/lib/queries/token";
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -25,7 +24,6 @@ type LoginSchema = z.infer<typeof loginSchema>;
 function Login() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { theme } = useTheme();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -42,7 +40,13 @@ function Login() {
     setError(null);
 
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8080";
+      // Get API URL from localStorage or use default
+      const apiUrl = getToken(TOKEN_ID.API_URL) || import.meta.env.VITE_API_URL || "http://localhost:8080";
+      
+      // Ensure API URL is saved
+      if (!getToken(TOKEN_ID.API_URL)) {
+        saveToken({ url: apiUrl });
+      }
 
       const result = await authService.login({
         url: apiUrl,
