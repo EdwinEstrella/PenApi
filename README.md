@@ -1,46 +1,29 @@
-<h1 align="center">Evolution Api</h1>
-
-<div align="center">
-
-[![Docker Image](https://img.shields.io/badge/Docker-image-blue)](https://hub.docker.com/r/evoapicloud/evolution-api)
-[![Whatsapp Group](https://img.shields.io/badge/Group-WhatsApp-%2322BC18)](https://evolution-api.com/whatsapp)
-[![Discord Community](https://img.shields.io/badge/Discord-Community-blue)](https://evolution-api.com/discord)
-[![Postman Collection](https://img.shields.io/badge/Postman-Collection-orange)](https://evolution-api.com/postman) 
-[![Documentation](https://img.shields.io/badge/Documentation-Official-green)](https://doc.evolution-api.com)
-[![Feature Requests](https://img.shields.io/badge/Feature-Requests-purple)](https://evolutionapi.canny.io/feature-requests)
-[![Roadmap](https://img.shields.io/badge/Roadmap-Community-blue)](https://evolutionapi.canny.io/feature-requests)
-[![Changelog](https://img.shields.io/badge/Changelog-Updates-green)](https://evolutionapi.canny.io/changelog)
-[![License](https://img.shields.io/badge/license-Apache--2.0-blue)](./LICENSE)
-[![Support](https://img.shields.io/badge/Donation-picpay-green)](https://app.picpay.com/user/davidsongomes1998)
-[![Sponsors](https://img.shields.io/badge/Github-sponsor-orange)](https://github.com/sponsors/EvolutionAPI)
-
-</div>
+<h1 align="center">PenApi</h1>
   
 <div align="center"><img src="./public/images/cover.png"></div>
 
-## Evolution API
+## PenApi
 
-Evolution API began as a WhatsApp controller API based on [CodeChat](https://github.com/code-chat-br/whatsapp-api), which in turn implemented the [Baileys](https://github.com/WhiskeySockets/Baileys) library. While originally focused on WhatsApp, Evolution API has grown into a comprehensive platform supporting multiple messaging services and integrations. We continue to acknowledge CodeChat for laying the groundwork.
+PenApi comenzó como una API de controlador de WhatsApp basada en [CodeChat](https://github.com/code-chat-br/whatsapp-api), que a su vez implementó la librería [Baileys](https://github.com/WhiskeySockets/Baileys). Aunque originalmente enfocada en WhatsApp, PenApi ha crecido hasta convertirse en una plataforma integral que soporta múltiples servicios de mensajería e integraciones. Continuamos reconociendo a CodeChat por sentar las bases.
 
-Today, Evolution API is not limited to WhatsApp. It integrates with various platforms such as Typebot, Chatwoot, Dify, and OpenAI, offering a broad array of functionalities beyond messaging. Evolution API supports both the Baileys-based WhatsApp API and the official WhatsApp Business API, with upcoming support for Instagram and Messenger.
+Hoy en día, PenApi no se limita a WhatsApp. Se integra con varias plataformas como Typebot, Chatwoot, Dify y OpenAI, ofreciendo una amplia gama de funcionalidades más allá de la mensajería. PenApi soporta tanto la API de WhatsApp basada en Baileys como la API oficial de WhatsApp Business, con próximamente soporte para Instagram y Messenger.
 
-## Looking for a Lightweight Version?
-For those who need a more streamlined and performance-optimized version, check out [Evolution API Lite](https://github.com/EvolutionAPI/evolution-api-lite). It's designed specifically for microservices, focusing solely on connectivity without integrations or audio conversion features. Ideal for environments that prioritize simplicity and efficiency.
+**Desarrollado por: Edwin Estrella**
 
-## Types of Connections
+## Tipos de Conexiones
 
-Evolution API supports multiple types of connections to WhatsApp, enabling flexible and powerful integration options:
+PenApi soporta múltiples tipos de conexiones a WhatsApp, permitiendo opciones de integración flexibles y potentes:
 
-- *WhatsApp API - Baileys*:
-  - A free API based on WhatsApp Web, leveraging the [Baileys library](https://github.com/WhiskeySockets/Baileys).
-  - This connection type allows control over WhatsApp Web functionalities through a RESTful API, suitable for multi-service chats, service bots, and other WhatsApp-integrated systems.
-  - Note: This method relies on the web version of WhatsApp and may have limitations compared to official APIs.
+- *API de WhatsApp - Baileys*:
+  - Una API gratuita basada en WhatsApp Web, utilizando la [librería Baileys](https://github.com/WhiskeySockets/Baileys).
+  - Este tipo de conexión permite controlar las funcionalidades de WhatsApp Web a través de una API RESTful, adecuada para chats multiservicio, bots de servicio y otros sistemas integrados con WhatsApp.
+  - Nota: Este método se basa en la versión web de WhatsApp y puede tener limitaciones comparado con las APIs oficiales.
 
-- *WhatsApp Cloud API*:
-  - The official API provided by Meta (formerly Facebook).
-  - This connection type offers a robust and reliable solution designed for businesses needing higher volumes of messaging and better integration support.
-  - The Cloud API supports features such as end-to-end encryption, advanced analytics, and more comprehensive customer service tools.
-  - To use this API, you must comply with Meta's policies and potentially pay for usage based on message volume and other factors.
+- *API Cloud de WhatsApp*:
+  - La API oficial proporcionada por Meta (anteriormente Facebook).
+  - Este tipo de conexión ofrece una solución robusta y confiable diseñada para empresas que necesitan volúmenes más altos de mensajería y mejor soporte de integración.
+  - La API Cloud soporta características como cifrado de extremo a extremo, análisis avanzados y herramientas de servicio al cliente más completas.
+  - Para usar esta API, debes cumplir con las políticas de Meta y potencialmente pagar por el uso basado en el volumen de mensajes y otros factores.
 
 ## Integrations
 
