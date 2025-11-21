@@ -4,7 +4,7 @@ import { CacheConf, configService } from '@config/env.config';
 import { BadRequestException, ForbiddenException, InternalServerErrorException, NotFoundException } from '@exceptions';
 import { NextFunction, Request, Response } from 'express';
 
-async function getInstance(instanceName: string) {
+async function getInstance(instanceName: string, userId?: string) {
   try {
     const cacheConf = configService.get<CacheConf>('CACHE');
 
@@ -13,9 +13,30 @@ async function getInstance(instanceName: string) {
     if (cacheConf.REDIS.ENABLED && cacheConf.REDIS.SAVE_INSTANCES) {
       const keyExists = await cache.has(instanceName);
 
-      return exists || keyExists;
+      if (exists || keyExists) {
+        // If user is authenticated, verify they own this instance
+        if (userId) {
+          const instance = await prismaRepository.instance.findFirst({
+            where: { name: instanceName },
+            include: { UserInstances: { where: { userId } } },
+          });
+          return instance && instance.UserInstances.length > 0;
+        }
+        return true;
+      }
     }
 
+    // Check in database
+    if (userId) {
+      // Multi-tenant: verify user owns the instance
+      const instance = await prismaRepository.instance.findFirst({
+        where: { name: instanceName },
+        include: { UserInstances: { where: { userId } } },
+      });
+      return instance && instance.UserInstances.length > 0;
+    }
+
+    // Legacy: check if instance exists (for API key auth)
     return exists || (await prismaRepository.instance.findMany({ where: { name: instanceName } })).length > 0;
   } catch (error) {
     throw new InternalServerErrorException(error?.toString());
@@ -32,7 +53,11 @@ export async function instanceExistsGuard(req: Request, _: Response, next: NextF
     throw new BadRequestException('"instanceName" not provided.');
   }
 
-  if (!(await getInstance(param.instanceName))) {
+  // Get user from JWT if authenticated
+  const user = (req as any).user;
+  const userId = user?.userId;
+
+  if (!(await getInstance(param.instanceName, userId))) {
     throw new NotFoundException(`The "${param.instanceName}" instance does not exist`);
   }
 
@@ -42,8 +67,26 @@ export async function instanceExistsGuard(req: Request, _: Response, next: NextF
 export async function instanceLoggedGuard(req: Request, _: Response, next: NextFunction) {
   if (req.originalUrl.includes('/instance/create')) {
     const instance = req.body as InstanceDto;
-    if (await getInstance(instance.instanceName)) {
-      throw new ForbiddenException(`This name "${instance.instanceName}" is already in use.`);
+    
+    // Get user from JWT if authenticated
+    const user = (req as any).user;
+    const userId = user?.userId;
+
+    // Multi-tenant: check if instance name is already in use by this user
+    if (userId) {
+      const userInstances = await prismaRepository.userInstance.findMany({
+        where: { userId },
+        include: { Instance: true },
+      });
+      const instanceNames = userInstances.map(ui => ui.Instance.name);
+      if (instanceNames.includes(instance.instanceName)) {
+        throw new ForbiddenException(`This name "${instance.instanceName}" is already in use.`);
+      }
+    } else {
+      // Legacy: check globally
+      if (await getInstance(instance.instanceName)) {
+        throw new ForbiddenException(`This name "${instance.instanceName}" is already in use.`);
+      }
     }
 
     if (waMonitor.waInstances[instance.instanceName]) {

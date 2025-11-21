@@ -27,11 +27,32 @@ async function apikey(req: Request, _: Response, next: NextFunction) {
   const param = req.params as unknown as InstanceDto;
 
   try {
+    // Check if user is authenticated via JWT
+    const user = (req as any).user;
+    if (user?.userId) {
+      // Multi-tenant: verify user owns the instance
+      if (param?.instanceName) {
+        const userInstance = await prismaRepository.userInstance.findFirst({
+          where: {
+            userId: user.userId,
+            Instance: { name: param.instanceName },
+          },
+        });
+        if (userInstance) {
+          return next();
+        }
+      } else {
+        // For fetchInstances, JWT auth is handled in the controller
+        return next();
+      }
+    }
+
+    // Legacy API key authentication
     if (param?.instanceName) {
-      const instance = await prismaRepository.instance.findUnique({
+      const instance = await prismaRepository.instance.findFirst({
         where: { name: param.instanceName },
       });
-      if (instance.token === key) {
+      if (instance && instance.token === key) {
         return next();
       }
     } else {

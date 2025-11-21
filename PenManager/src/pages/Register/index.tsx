@@ -81,9 +81,8 @@ export default function RegisterPage() {
   return (
     <div className="flex min-h-screen flex-col">
       <div className="flex items-center justify-center pt-2">
-        <div className="flex items-center gap-1 h-10">
-          <span className="text-blue-500 font-bold text-2xl">Pen</span>
-          <span className="text-white font-bold text-2xl">Api</span>
+        <div className="flex items-center gap-0 h-10">
+          <span className="text-blue-500 font-bold text-2xl">PenApi</span>
         </div>
       </div>
       <div className="flex flex-1 items-center justify-center p-8">

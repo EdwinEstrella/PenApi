@@ -17,9 +17,8 @@ export default function Home() {
     <div className="min-h-screen bg-background">
       {/* Header with theme toggle */}
       <header className="flex items-center justify-between px-4 py-2">
-        <div className="flex items-center gap-1 h-10">
-          <span className="text-blue-500 font-bold text-2xl">Pen</span>
-          <span className="text-white font-bold text-2xl">Api</span>
+        <div className="flex items-center gap-0 h-10">
+          <span className="text-blue-500 font-bold text-2xl">PenApi</span>
         </div>
         <div className="flex items-center gap-4">
           <LanguageToggle />
@@ -32,9 +31,8 @@ export default function Home() {
           {/* Header */}
           <div className="text-center mb-12">
             <div className="flex items-center justify-center mb-6">
-              <div className="flex items-center gap-1 h-12">
-                <span className="text-blue-500 font-bold text-4xl">Pen</span>
-                <span className="text-white font-bold text-4xl">Api</span>
+              <div className="flex items-center gap-0 h-12">
+                <span className="text-blue-500 font-bold text-4xl">PenApi</span>
               </div>
             </div>
             <h1 className="text-4xl font-bold text-foreground mb-4">

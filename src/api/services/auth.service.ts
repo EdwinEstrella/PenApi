@@ -2,7 +2,7 @@ import bcrypt from 'bcryptjs';
 import jwt, { SignOptions } from 'jsonwebtoken';
 import { Logger } from '@config/logger.config';
 import { prismaRepository } from '@api/server.module';
-import { UserRole, UserStatus, PlanType } from '@prisma/client';
+import { UserRole, UserStatus, PlanType, SubscriptionStatus } from '@prisma/client';
 
 const logger = new Logger('AUTH_SERVICE');
 
@@ -87,7 +87,7 @@ class AuthService {
         role: UserRole.USER,
         status: UserStatus.ACTIVE,
         planType: PlanType.FREE,
-        subscriptionStatus: 'ACTIVE',
+        subscriptionStatus: SubscriptionStatus.ACTIVE,
       },
     });
 

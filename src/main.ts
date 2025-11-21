@@ -25,6 +25,7 @@ import compression from 'compression';
 import cors from 'cors';
 import express, { json, NextFunction, Request, Response, urlencoded } from 'express';
 import { join } from 'path';
+import { seedDefaultUser } from '@utils/seed-default-user';
 
 function initWA() {
   waMonitor.loadInstance();
@@ -43,6 +44,13 @@ async function bootstrap() {
 
   const prismaRepository = new PrismaRepository(configService);
   await prismaRepository.onModuleInit();
+
+  // Seed default user if it doesn't exist
+  try {
+    await seedDefaultUser(prismaRepository);
+  } catch (error) {
+    logger.warn('Failed to seed default user:', error);
+  }
 
   app.use(
     cors({

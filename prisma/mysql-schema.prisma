@@ -125,7 +125,7 @@ model Plan {
 
 model Instance {
   id                      String                   @id @default(cuid())
-  name                    String                   @unique @db.VarChar(255)
+  name                    String                   @db.VarChar(255)
   connectionStatus        InstanceConnectionStatus @default(open)
   ownerJid                String?                  @db.VarChar(100)
   profileName             String?                  @db.VarChar(100)
@@ -175,6 +175,8 @@ model Instance {
   EvoaiSetting            EvoaiSetting?
   Pusher                  Pusher?
   UserInstances           UserInstance[]
+
+  @@index([name])
 }
 
 model Session {

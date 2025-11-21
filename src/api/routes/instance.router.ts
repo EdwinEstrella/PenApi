@@ -74,12 +74,15 @@ export class InstanceRouter extends RouterBroker {
       })
       .get(this.routerPath('fetchInstances', false), ...guards, async (req, res) => {
         const key = req.get('apikey');
+        // Get user from JWT if authenticated
+        const user = (req as any).user;
+        const userId = user?.userId;
 
         const response = await this.dataValidate<InstanceDto>({
           request: req,
           schema: null,
           ClassRef: InstanceDto,
-          execute: (instance) => instanceController.fetchInstances(instance, key),
+          execute: (instance) => instanceController.fetchInstances(instance, key, userId),
         });
 
         return res.status(HttpStatus.OK).json(response);

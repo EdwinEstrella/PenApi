@@ -367,9 +367,40 @@ export class InstanceController {
     };
   }
 
-  public async fetchInstances({ instanceName, instanceId, number }: InstanceDto, key: string) {
+  public async fetchInstances({ instanceName, instanceId, number }: InstanceDto, key: string, userId?: string) {
     const env = this.configService.get<Auth>('AUTHENTICATION').API_KEY;
 
+    // If user is authenticated via JWT, filter by user's instances
+    if (userId) {
+      const userInstances = await this.prismaRepository.userInstance.findMany({
+        where: { userId },
+        include: { Instance: true },
+      });
+
+      const instanceIds = userInstances.map(ui => ui.instanceId);
+      const instances = userInstances.map(ui => ui.Instance);
+
+      // Filter by instanceName, instanceId, or number if provided
+      let filteredInstances = instances;
+      if (instanceName) {
+        filteredInstances = instances.filter(i => i.name === instanceName);
+      }
+      if (instanceId) {
+        filteredInstances = instances.filter(i => i.id === instanceId);
+      }
+      if (number) {
+        filteredInstances = instances.filter(i => i.number === number);
+      }
+
+      if (filteredInstances.length === 0) {
+        throw new UnauthorizedException('Instance not found or access denied');
+      }
+
+      const names = filteredInstances.map(i => i.name);
+      return this.waMonitor.instanceInfo(names);
+    }
+
+    // Legacy API key authentication
     if (env.KEY !== key) {
       const instancesByKey = await this.prismaRepository.instance.findMany({
         where: {
@@ -382,7 +413,7 @@ export class InstanceController {
       if (instancesByKey.length > 0) {
         const names = instancesByKey.map((instance) => instance.name);
 
-        return this.waMonitor.instanceInfo(names);
+        return this.waMonitor.instanceInfo(names, userId);
       } else {
         throw new UnauthorizedException();
       }
@@ -394,7 +425,7 @@ export class InstanceController {
 
     const instanceNames = instanceName ? [instanceName] : null;
 
-    return this.waMonitor.instanceInfo(instanceNames);
+    return this.waMonitor.instanceInfo(instanceNames, userId);
   }
 
   public async setPresence({ instanceName }: InstanceDto, data: SetPresenceDto) {

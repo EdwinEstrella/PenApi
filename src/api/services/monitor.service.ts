@@ -64,7 +64,7 @@ export class WAMonitoringService {
     }
   }
 
-  public async instanceInfo(instanceNames?: string[]): Promise<any> {
+  public async instanceInfo(instanceNames?: string[], userId?: string): Promise<any> {
     if (instanceNames && instanceNames.length > 0) {
       const inexistentInstances = instanceNames ? instanceNames.filter((instance) => !this.waInstances[instance]) : [];
 
@@ -77,6 +77,43 @@ export class WAMonitoringService {
 
     const clientName = this.configService.get<Database>('DATABASE').CONNECTION.CLIENT_NAME;
 
+    // Multi-tenant: if userId provided, filter by user's instances
+    if (userId) {
+      const userInstances = await this.prismaRepository.userInstance.findMany({
+        where: { userId },
+        include: {
+          Instance: {
+            include: {
+              Chatwoot: true,
+              Proxy: true,
+              Rabbitmq: true,
+              Nats: true,
+              Sqs: true,
+              Websocket: true,
+              Setting: true,
+              _count: {
+                select: {
+                  Message: true,
+                  Contact: true,
+                  Chat: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      let instances = userInstances.map(ui => ui.Instance);
+
+      // Filter by instanceNames if provided
+      if (instanceNames && instanceNames.length > 0) {
+        instances = instances.filter(i => instanceNames.includes(i.name));
+      }
+
+      return instances;
+    }
+
+    // Legacy: filter by clientName (for API key auth)
     const where =
       instanceNames && instanceNames.length > 0
         ? {
